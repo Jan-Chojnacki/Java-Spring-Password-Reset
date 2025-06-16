@@ -12,7 +12,7 @@
         <li><a th:href="@{/forgot-password}">Forgot Password</a></li>
     </ul>
 </nav>
-<a th:if="${token}" th:href="${token}">Reset link</a>
+<a th:if="${link}" th:href="${link}">Reset link</a>
 <form th:action="@{/perform-login}" method="post">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>

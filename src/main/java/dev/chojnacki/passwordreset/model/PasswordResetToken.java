@@ -3,6 +3,7 @@ package dev.chojnacki.passwordreset.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -14,6 +15,9 @@ public class PasswordResetToken {
 
     @Column
     private UUID token;
+
+    @Column
+    private Instant expiration;
 
     @ManyToOne
     private User user;

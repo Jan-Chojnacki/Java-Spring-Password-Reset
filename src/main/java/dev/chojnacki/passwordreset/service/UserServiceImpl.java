@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,6 +39,7 @@ public class UserServiceImpl implements UserService {
     public User resetPassword(ResetPassword resetPassword) {
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findPasswordResetTokenByToken(resetPassword.getToken());
         if (passwordResetToken == null) throw new IllegalArgumentException();
+        if (passwordResetToken.getExpiration().isBefore(Instant.now())) throw new IllegalArgumentException();
 
         User user = passwordResetToken.getUser();
 

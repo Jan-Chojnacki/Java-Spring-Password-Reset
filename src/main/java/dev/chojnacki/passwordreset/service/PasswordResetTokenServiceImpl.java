@@ -7,6 +7,8 @@ import dev.chojnacki.passwordreset.repository.PasswordResetTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -28,6 +30,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         passwordResetToken.setUser(user);
         passwordResetToken.setToken(UUID.randomUUID());
+        passwordResetToken.setExpiration(Instant.now().plus(Duration.ofMinutes(15)));
 
         return passwordResetTokenRepository.save(passwordResetToken);
     }

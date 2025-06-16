@@ -6,9 +6,11 @@ import dev.chojnacki.passwordreset.model.dto.ResetPassword;
 import dev.chojnacki.passwordreset.model.dto.ResetPasswordRequest;
 import dev.chojnacki.passwordreset.service.PasswordResetTokenService;
 import dev.chojnacki.passwordreset.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -57,7 +59,7 @@ public class AuthController {
     public String forgotPassword(@ModelAttribute("user") ResetPasswordRequest resetPasswordRequest, Model model) {
         try {
             PasswordResetToken token = passwordResetTokenService.generateResetPasswordToken(resetPasswordRequest);
-            model.addAttribute("token", generateResetPasswordLink(token));
+            model.addAttribute("link", generateResetPasswordLink(token));
             return "/login";
         }catch (IllegalArgumentException e) {
             return "/forgot";
@@ -73,7 +75,10 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public String resetUserPassword(@ModelAttribute("password") ResetPassword resetPassword) {
+    public String resetUserPassword(@ModelAttribute("password") @Valid ResetPassword resetPassword, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "/reset";
+        }
         try {
             userService.resetPassword(resetPassword);
             return "redirect:/login";
