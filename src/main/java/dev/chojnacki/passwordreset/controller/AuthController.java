@@ -58,7 +58,7 @@ public class AuthController {
     @PostMapping("/forgot-password")
     public String forgotPassword(@ModelAttribute("user") ResetPasswordRequest resetPasswordRequest, Model model) {
         try {
-            PasswordResetToken token = passwordResetTokenService.generateResetPasswordToken(resetPasswordRequest);
+            PasswordResetToken token = passwordResetTokenService.generateResetPasswordToken(resetPasswordRequest, 15);
             model.addAttribute("link", generateResetPasswordLink(token));
             return "/login";
         }catch (IllegalArgumentException e) {

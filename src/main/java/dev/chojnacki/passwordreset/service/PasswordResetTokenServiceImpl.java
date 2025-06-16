@@ -23,14 +23,14 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
     }
 
     @Override
-    public PasswordResetToken generateResetPasswordToken(ResetPasswordRequest resetPasswordRequest) {
+    public PasswordResetToken generateResetPasswordToken(ResetPasswordRequest resetPasswordRequest, int expiration) {
         User user = userService.findUserByEmail(resetPasswordRequest.getEmail());
         if (user == null) throw new IllegalArgumentException();
 
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         passwordResetToken.setUser(user);
         passwordResetToken.setToken(UUID.randomUUID());
-        passwordResetToken.setExpiration(Instant.now().plus(Duration.ofMinutes(15)));
+        passwordResetToken.setExpiration(Instant.now().plus(Duration.ofMinutes(expiration)));
 
         return passwordResetTokenRepository.save(passwordResetToken);
     }
